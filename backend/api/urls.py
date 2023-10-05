@@ -1,9 +1,6 @@
 from django.urls import path
 from . import views
-
-from rest_framework_simplejwt.views import (
-    TokenRefreshView,
-)
+from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path('token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -11,8 +8,6 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='auth_register'),
     path('test/', views.testEndPoint, name='test'),
     path('', views.getRoutes),
-
-   
 
     # Chat/Text Messaging Functionality
     path("my-messages/<user_id>/", views.MyInbox.as_view()),
@@ -22,5 +17,4 @@ urlpatterns = [
     # Get profile
     path("profile/<int:pk>/", views.ProfileDetail.as_view()),
     path("search/<username>/", views.SearchUser.as_view()),
-
 ]

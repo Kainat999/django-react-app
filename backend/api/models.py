@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 class User(AbstractUser):
     username = models.CharField(max_length=100)
@@ -30,8 +31,7 @@ class ChatMessage(models.Model):
     receiver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="received_messages")
     message = models.TextField()
     is_read = models.BooleanField(default=False)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    
+    timestamp = models.DateTimeField(default=timezone.now)
     class Meta:
         ordering = ['timestamp']
         verbose_name_plural = "Messages"

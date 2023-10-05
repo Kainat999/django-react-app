@@ -1,20 +1,26 @@
-# backend/urls.py
-
 from django.contrib import admin
-from django.urls import path
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+# Import necessary modules for Django Channels routing
+from channels.routing import ProtocolTypeRouter, URLRouter
+from api import consumers # Import your ChatConsumer
+
+# Define the WebSocket URLs
+websocket_urlpatterns = [
+    path('ws/chat/', consumers.ChatConsumer.as_asgi()), # New WebSocket URL
+]
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include("api.urls")),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
-    path("ckeditor5/", include('django_ckeditor_5.urls')),
-
 ]
 
-
-urlpatterns +=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+# Including the Django Channels router
+application = ProtocolTypeRouter({
+    "websocket": URLRouter(websocket_urlpatterns)
+})
