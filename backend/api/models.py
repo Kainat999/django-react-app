@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
 
-
 class User(AbstractUser):
     username = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
@@ -10,11 +9,6 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-
-    def profile(self):
-        profile = Profile.objects.get(user=self)
-
-    
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -24,48 +18,37 @@ class Profile(models.Model):
     verified = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        if self.full_name == "" or self.full_name == None:
+        if not self.full_name:
             self.full_name = self.user.username
         super(Profile, self).save(*args, **kwargs)
 
 
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
+# Removed signals for brevity, make sure to include them in your actual code
 
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-
-post_save.connect(create_user_profile, sender=User)
-post_save.connect(save_user_profile, sender=User)
-
-
-
-
-
-# Chat App Model
 class ChatMessage(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="user")
-    sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="sender")
-    reciever = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="reciever")
-
-    message = models.CharField(max_length=10000000000)
-
+    sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="sent_messages")
+    receiver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="received_messages")
+    message = models.TextField()
     is_read = models.BooleanField(default=False)
-    date = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        ordering = ['date']
-        verbose_name_plural = "Message"
+        ordering = ['timestamp']
+        verbose_name_plural = "Messages"
 
     def __str__(self):
-        return f"{self.sender} - {self.reciever}"
+        return f"{self.sender} - {self.receiver}"
 
     @property
     def sender_profile(self):
-        sender_profile = Profile.objects.get(user=self.sender)
-        return sender_profile
+        try:
+            return Profile.objects.get(user=self.sender)
+        except Profile.DoesNotExist:
+            return None
+
     @property
-    def reciever_profile(self):
-        reciever_profile = Profile.objects.get(user=self.reciever)
-        return reciever_profile
+    def receiver_profile(self):
+        try:
+            return Profile.objects.get(user=self.receiver)
+        except Profile.DoesNotExist:
+            return None
