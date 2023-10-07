@@ -2,9 +2,7 @@ import React from 'react'
 import './style/Message.css'
 import { useState, useEffect } from 'react'
 import useAxios from '../utils/useAxios'
-import jwtDecode from 'jwt-decode'
 import { Link, useParams, useHistory } from 'react-router-dom/'
-import moment from 'moment';
 const swal = require('sweetalert2')
 
 function SearchUsers() {

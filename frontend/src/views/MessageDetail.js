@@ -1,4 +1,3 @@
-// MessageDetail.js
 
 import React, { useContext, useEffect, useState } from 'react';
 import './style/Message.css';
@@ -87,7 +86,6 @@ function MessageDetail() {
             console.log("error ===", error);
         });
 
-        // Send through WebSocket
         if (wsContext) {
             wsContext.sendMessage({
                 user: user_id,
@@ -120,7 +118,6 @@ function MessageDetail() {
             });
     };
 
-    // ... Rest of your component render logic ...
 
     return (
       <div>

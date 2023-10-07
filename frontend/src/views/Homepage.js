@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import the Link component
+import { Link } from 'react-router-dom'; 
 
 function Homepage() {
   return (
@@ -15,7 +15,6 @@ function Homepage() {
         </div>
         <div className="container">
           <div className="row">
-            {/* Use Link instead of a for client-side navigation */}
             <Link to="/login" className="btn btn-primary btn-lg mr-3">Login</Link>
             <Link to="/register" className="btn btn-secondary btn-lg">Registration</Link>
           </div>

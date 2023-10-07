@@ -1,6 +1,6 @@
 import {useContext} from 'react'
 import jwt_decode from "jwt-decode"
-import AuthContext from '../context/AuthContext'
+import { AuthContext } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
 
 function Navbar() {

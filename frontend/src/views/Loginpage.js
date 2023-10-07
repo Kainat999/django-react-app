@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-import AuthContext from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext'
 
 function Loginpage() {
   
@@ -16,7 +16,6 @@ function Loginpage() {
       const result = await loginUser(email, password);
 
       if (result) {
-        // Assuming the backend responds with success or error indication.
         if (result.success) {
           console.log("Successful login. Initialize WebSocket here if needed.");
         } else {

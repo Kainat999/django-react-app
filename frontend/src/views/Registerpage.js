@@ -1,6 +1,6 @@
 import {useState, useContext} from 'react'
 import { Link } from 'react-router-dom'
-import AuthContext from '../context/AuthContext'
+import { AuthContext } from '../context/AuthContext'
 
 
 function Registerpage() {
@@ -131,7 +131,6 @@ function Registerpage() {
           </div>
         </section>
         <footer className="bg-light text-center text-lg-start">
-          {/* Copyright */}
           <div
             className="text-center p-3"
             style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
@@ -141,7 +140,6 @@ function Registerpage() {
               ChatApp.com
             </a>
           </div>
-          {/* Copyright */}
         </footer>
     </>
 

@@ -1,5 +1,4 @@
 
-// Message.js file code 
 import React, { useState, useContext } from 'react';
 import './style/Message.css';
 import jwtDecode from 'jwt-decode';
@@ -19,7 +18,7 @@ function Message() {
             ws.send(JSON.stringify({
                 type: 'SEND_MESSAGE',
                 content: messageContent,
-                receiver_id: null // Remember to handle this properly. For now, we'll leave it null.
+                receiver_id: null
             }));
             setMessageContent("");
         }
@@ -27,7 +26,6 @@ function Message() {
 
     return (
         <div className="message-container">
-            {/* Display Messages */}
             <div className="messages-display">
                 {messages.map((msg, index) => (
                     <div 
@@ -39,7 +37,6 @@ function Message() {
                 ))}
             </div>
             
-            {/* Message sending part */}
             <div className="message-input-section">
                 <input
                     type="text"
