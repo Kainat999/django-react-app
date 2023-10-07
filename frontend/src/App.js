@@ -24,8 +24,8 @@ function App() {
             <Route component={Loginpage} path="/login" />
             <Route component={Registerpage} path="/register" exact />
             <Route component={Homepage} path="/" exact />
-            <Route component={Inbox} path="/inbox" exact />
-            <Route component={Message} path="/userList" exact />
+            <Route component={Message} path="/inbox" exact />
+            <Route component={Inbox} path="/userList" exact />
             <Route component={MessageDetail} path="/inbox/:id" exact />
             <Route component={SearchUsers} path="/search/:username" exact />
           </Switch>

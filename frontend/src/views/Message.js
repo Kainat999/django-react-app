@@ -4,7 +4,8 @@ import './style/Message.css';
 import jwtDecode from 'jwt-decode';
 import WebSocketContext from '../context/WebSocketContext';
 
-function Message() {
+function Message({ match }) {
+    const receiverId = match.params.userId;
     const [messageContent, setMessageContent] = useState("");
 
     const token = localStorage.getItem('authTokens');
@@ -18,7 +19,7 @@ function Message() {
             ws.send(JSON.stringify({
                 type: 'SEND_MESSAGE',
                 content: messageContent,
-                receiver_id: null
+                receiver_id: receiverId
             }));
             setMessageContent("");
         }
