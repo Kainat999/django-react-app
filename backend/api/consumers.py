@@ -1,5 +1,3 @@
-# consumer.py file code 
-
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.layers import get_channel_layer
@@ -14,31 +12,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_add(
                 self.room_group_name,
                 self.channel_name
-                )
+            )
             await self.accept()
         else:
             await self.close()
-
 
     async def disconnect(self, close_code):
         if hasattr(self, 'room_group_name'):
             await self.channel_layer.group_discard(
                 self.room_group_name,
                 self.channel_name
-        ) 
-    # async def connect(self):
-#         self.user_id = self.scope["user"].id
-#         self.room_group_name = f'chat_{self.user_id}'
-#         await self.channel_layer.group_add(
-#             self.room_group_name,
-#             self.channel_name
-#         )
-#         await self.accept()
-    
-
-      
-
-
+            )
 
     @database_sync_to_async
     def create_message(self, message_content, sender_id, receiver_id):
@@ -57,10 +41,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender_id = data['sender_id']
         receiver_id = data['receiver_id']
 
-        # Create a new message object and save it to the database
         message_obj = await self.create_message(message_content, sender_id, receiver_id)
 
-        # Send the message to the group (in this case, just to the receiver)
         await self.channel_layer.group_send(
             f'chat_{receiver_id}',
             {
@@ -78,7 +60,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         receiver_id = event['receiver_id']
         timestamp = event['timestamp']
 
-        # Send the message to the websocket
         await self.send(text_data=json.dumps({
             'message': message,
             'sender_id': sender_id,
