@@ -1,3 +1,4 @@
+# serializer.py
 from api.models import User, ChatMessage, Profile
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -10,21 +11,25 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email')
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
         
-        # These are claims, you can add custom claims
-        token['full_name'] = user.profile.full_name
+        # If the user has a profile, fetch details from the profile; otherwise, set default values.
+        has_profile = hasattr(user, 'profile')
+
+        # Add custom claims to the token
+        token['full_name'] = user.profile.full_name if has_profile else 'Unknown User'
         token['username'] = user.username
         token['email'] = user.email
-        token['bio'] = user.profile.bio
-        token['image'] = str(user.profile.image)
-        token['verified'] = user.profile.verified
-        # ...
+        token['bio'] = user.profile.bio if has_profile else ''
+        token['image'] = str(user.profile.image) if has_profile else 'default.jpg'
+        token['verified'] = user.profile.verified if has_profile else False
+        
         return token
+
 
 
 class RegisterSerializer(serializers.ModelSerializer):

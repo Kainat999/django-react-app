@@ -1,3 +1,5 @@
+# project urls.py file code 
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -9,7 +11,7 @@ from api import consumers # Import your ChatConsumer
 
 # Define the WebSocket URLs
 websocket_urlpatterns = [
-    path('ws/chat/', consumers.ChatConsumer.as_asgi()), # New WebSocket URL
+    path('ws/api/', consumers.ChatConsumer.as_asgi()), # New WebSocket URL
 ]
 
 urlpatterns = [

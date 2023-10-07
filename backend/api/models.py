@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
+from django.dispatch import receiver
 
 class User(AbstractUser):
     username = models.CharField(max_length=100)
@@ -9,7 +10,6 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
-
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -22,9 +22,6 @@ class Profile(models.Model):
         if not self.full_name:
             self.full_name = self.user.username
         super(Profile, self).save(*args, **kwargs)
-
-
-# Removed signals for brevity, make sure to include them in your actual code
 
 class ChatMessage(models.Model):
     sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="sent_messages")
@@ -52,3 +49,10 @@ class ChatMessage(models.Model):
             return Profile.objects.get(user=self.receiver)
         except Profile.DoesNotExist:
             return None
+
+# Signal for creating or updating user profile
+@receiver(post_save, sender=User)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    instance.profile.save()

@@ -1,7 +1,10 @@
+# views.py 
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import OuterRef, Subquery
-from django.db.models import Q
+from django.db.models import Q, F, Max
+
+
 
 from api.models import User, Profile, ChatMessage
 
@@ -62,23 +65,18 @@ class MyInbox(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['user_id']
 
-        messages = ChatMessage.objects.filter(
-            id__in =  Subquery(
-                User.objects.filter(
-                    Q(sender__reciever=user_id) |
-                    Q(reciever__sender=user_id)
-                ).distinct().annotate(
-                    last_msg=Subquery(
-                        ChatMessage.objects.filter(
-                            Q(sender=OuterRef('id'),reciever=user_id) |
-                            Q(reciever=OuterRef('id'),sender=user_id)
-                        ).order_by('-id')[:1].values_list('id',flat=True) 
-                    )
-                ).values_list('last_msg', flat=True).order_by("-id")
-            )
-        ).order_by("-id")
-            
+        # Subquery to get the latest message ID for each distinct chat pair
+        latest_messages = ChatMessage.objects.filter(
+            Q(sender_id=user_id) | Q(receiver_id=user_id)
+        ).values('sender_id', 'receiver_id').annotate(
+            latest_id=Max('id')
+        ).values('latest_id')
+
+        # Fetching the messages using the latest message IDs
+        messages = ChatMessage.objects.filter(id__in=latest_messages).order_by('-timestamp')
+
         return messages
+
     
 class GetMessages(generics.ListAPIView):
     serializer_class = MessageSerializer
