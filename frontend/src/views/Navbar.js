@@ -43,7 +43,7 @@ function Navbar() {
             {token !== null && 
               <>
                 <li class="nav-item">
-                  <Link class="nav-link" to="/inbox"> <i className='fas fa-envelope'></i> Inbox</Link>
+                  <Link class="nav-link" to="/userList"> <i className='fas fa-envelope'></i> Inbox</Link>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" onClick={logoutUser} style={{cursor:"pointer"}}> <i className='fas fa-sign-out-alt'></i>Logout</a>
