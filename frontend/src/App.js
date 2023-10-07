@@ -1,3 +1,4 @@
+// App.js
 import React from 'react';
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import PrivateRoute from "./utils/PrivateRoute";
@@ -10,6 +11,7 @@ import Navbar from './views/Navbar';
 import Message from './views/Message';
 import MessageDetail from './views/MessageDetail';
 import SearchUsers from './views/SearchUsers';
+import Inbox from './views/inbox';
 
 // Import the WebSocketProvider
 import WebSocketProvider from './context/WebSocketProvider';
@@ -26,6 +28,7 @@ function App() {
             <Route component={Registerpage} path="/register" exact />
             <Route component={Homepage} path="/" exact />
             <Route component={Message} path="/inbox" exact />
+            <Route component={Inbox} path="/userList" exact />
             <Route component={MessageDetail} path="/inbox/:id" exact />
             <Route component={SearchUsers} path="/search/:username" exact />
           </Switch>

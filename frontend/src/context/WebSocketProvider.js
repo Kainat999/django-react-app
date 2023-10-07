@@ -1,3 +1,4 @@
+// WebSocketProvider.js
 import React, { useState, useEffect } from 'react';
 import WebSocketContext from './WebSocketContext';
 
@@ -6,7 +7,7 @@ export const WebSocketProvider = ({ children }) => {
     const [ws, setWs] = useState(null);
 
     useEffect(() => {
-        const wsInstance = new WebSocket('ws://localhost:8000/ws/api/');
+        const wsInstance = new WebSocket('ws://127.0.0.1:8000/ws/api/');
 
         wsInstance.onmessage = (event) => {
             const data = JSON.parse(event.data);

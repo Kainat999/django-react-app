@@ -1,3 +1,5 @@
+// MessageDetail.js
+
 import React, { useContext, useEffect, useState } from 'react';
 import './style/Message.css';
 import useAxios from '../utils/useAxios';
@@ -24,7 +26,8 @@ function MessageDetail() {
     const history = useHistory();
 
     useEffect(() => {
-        wsContext.connect();
+        const roomName = `${user_id}_${id.id}`;
+        wsContext.connect(roomName);
 
         wsContext.addMessageListener((incomingMessage) => {
             if (incomingMessage && (incomingMessage.reciever === user_id || incomingMessage.sender === user_id)) {
@@ -33,10 +36,10 @@ function MessageDetail() {
         });
 
         return () => {
-            wsContext.disconnect();
+            wsContext.disconnect(roomName);
             wsContext.removeMessageListener();
         };
-    }, [wsContext, user_id]);
+    }, [wsContext, user_id, id.id]);
 
     useEffect(() => {
         axios.get(baseURL + '/my-messages/' + user_id + '/').then((res) => {
@@ -44,19 +47,13 @@ function MessageDetail() {
         }).catch(error => {
             console.log(error);
         });
-    }, [axios, user_id, baseURL]);
 
-    useEffect(() => {
-        let interval = setInterval(() => {
-            axios.get(baseURL + '/get-messages/' + user_id + '/' + id.id + '/').then((res) => {
-                setMessage(res.data);
-            }).catch(error => {
-                console.log(error);
-            });
-        }, 1000);
-        return () => {
-            clearInterval(interval);
-        };
+        axios.get(baseURL + '/get-messages/' + user_id + '/' + id.id + '/').then((res) => {
+            setMessage(res.data);
+        }).catch(error => {
+            console.log(error);
+        });
+
     }, [axios, user_id, baseURL, id.id]);
 
     useEffect(() => {
@@ -122,6 +119,8 @@ function MessageDetail() {
                 alert("User Does Not Exist");
             });
     };
+
+    // ... Rest of your component render logic ...
 
     return (
       <div>
