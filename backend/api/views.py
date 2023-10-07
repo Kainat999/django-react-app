@@ -28,7 +28,6 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 
-# Get All Routes
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -58,21 +57,25 @@ def testEndPoint(request):
 
 
 
-# Chat APp
+
+class GetAllUsers(generics.ListAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    
 class MyInbox(generics.ListAPIView):
     serializer_class = MessageSerializer
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
 
-        # Subquery to get the latest message ID for each distinct chat pair
         latest_messages = ChatMessage.objects.filter(
             Q(sender_id=user_id) | Q(receiver_id=user_id)
         ).values('sender_id', 'receiver_id').annotate(
             latest_id=Max('id')
         ).values('latest_id')
 
-        # Fetching the messages using the latest message IDs
         messages = ChatMessage.objects.filter(id__in=latest_messages).order_by('-timestamp')
 
         return messages
@@ -83,8 +86,8 @@ class GetMessages(generics.ListAPIView):
     
     def get_queryset(self):
         sender_id = self.kwargs['sender_id']
-        reciever_id = self.kwargs['reciever_id']
-        messages =  ChatMessage.objects.filter(sender__in=[sender_id, reciever_id], reciever__in=[sender_id, reciever_id])
+        receiver_id = self.kwargs['receiver_id']
+        messages =  ChatMessage.objects.filter(sender__in=[sender_id, receiver_id], receiver__in=[sender_id, receiver_id])
         return messages
 
 class SendMessages(generics.CreateAPIView):

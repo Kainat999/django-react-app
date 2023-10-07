@@ -50,7 +50,6 @@ class ChatMessage(models.Model):
         except Profile.DoesNotExist:
             return None
 
-# Signal for creating or updating user profile
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:

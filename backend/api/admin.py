@@ -13,7 +13,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 class ChatMessageAdmin(admin.ModelAdmin):
     list_editable = ['is_read', 'message']
-    list_display = ['sender', 'receiver', 'is_read', 'message']  # Corrected the spelling for 'receiver'
+    list_display = ['sender', 'receiver', 'is_read', 'message']  
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Profile, ProfileAdmin)
