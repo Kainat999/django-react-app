@@ -6,14 +6,11 @@ from .models import ChatMessage, User
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        # Extract the sender_id and receiver_id from the URL.
         self.sender_id = self.scope['url_route']['kwargs']['sender_id']
         self.receiver_id = self.scope['url_route']['kwargs']['receiver_id']
 
-        # Form the room_group_name using both IDs.
         self.room_group_name = f'chat_{self.sender_id}_{self.receiver_id}'
 
-        # If the authenticated user matches either the sender or receiver, proceed to connect.
         if self.scope["user"].is_authenticated and (self.scope["user"].id == int(self.sender_id) or self.scope["user"].id == int(self.receiver_id)):
             await self.channel_layer.group_add(
                 self.room_group_name,
@@ -49,7 +46,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         message_obj = await self.create_message(message_content, sender_id, receiver_id)
 
-        # Send the message to both the sender's and receiver's group.
         for user_id in [sender_id, receiver_id]:
             await self.channel_layer.group_send(
                 f'chat_{sender_id}_{user_id}',
